@@ -117,6 +117,26 @@ export default class CircularSlider extends PureComponent {
       onMoveShouldSetPanResponder: (evt, gestureState) => true,
       onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
 
+      onPanResponderGrant: () => {
+        console.log('started');
+        if (this.props.onDragStart) {
+          this.props.onDragStart();
+        }
+      },
+
+      onPanResponderEnd: () => {
+        console.log('ended');
+        if (this.props.onDragEnd) {
+          this.props.onDragEnd();
+        }
+      },
+
+      onPanResponderRelease: () => {
+        console.log('ended');
+        if (this.props.onDragEnd) {
+          this.props.onDragEnd();
+        }
+      },
       onPanResponderMove: (evt, { moveX, moveY }) => {
         const { circleCenterX, circleCenterY } = this.state;
         const { angleLength, startAngle, onUpdate } = this.props;
@@ -144,17 +164,28 @@ export default class CircularSlider extends PureComponent {
           // this.wakeHourParameter.rotation = 0;
         }
 
-        if (currentAngle - previousAngle > 300) {
-          if (this.wakeHourParameter.rotation === 0) {
-            this.wakeHourParameter.rotation = 1;
-          } else {
-            this.wakeHourParameter.rotation = 0;
-          }
-        } else if (currentAngle - previousAngle < -300) {
-          if (this.wakeHourParameter.rotation === 0) {
-            this.wakeHourParameter.rotation = 1;
-          } else {
-            this.wakeHourParameter.rotation = 0;
+        console.log(
+          'current Angle',
+          currentAngle,
+          previousAngle,
+          currentAngle - previousAngle
+        );
+
+        if (currentAngle !== null && previousAngle !== null) {
+          if (currentAngle - previousAngle > 300) {
+            console.log('condition 1');
+            if (this.wakeHourParameter.rotation === 0) {
+              this.wakeHourParameter.rotation = 1;
+            } else {
+              this.wakeHourParameter.rotation = 0;
+            }
+          } else if (currentAngle - previousAngle < -300) {
+            console.log('condition 2');
+            if (this.wakeHourParameter.rotation === 0) {
+              this.wakeHourParameter.rotation = 1;
+            } else {
+              this.wakeHourParameter.rotation = 0;
+            }
           }
         }
 
@@ -192,6 +223,27 @@ export default class CircularSlider extends PureComponent {
         }
 
         onUpdate({ startAngle: startAngle, angleLength: newAngleLength });
+      },
+
+      onPanResponderGrant: () => {
+        console.log('wake start');
+        if (this.props.onDragStart) {
+          this.props.onDragStart();
+        }
+      },
+
+      onPanResponderEnd: () => {
+        console.log('wake end');
+        if (this.props.onDragEnd) {
+          this.props.onDragEnd();
+        }
+      },
+
+      onPanResponderRelease: () => {
+        console.log('wake end');
+        if (this.props.onDragEnd) {
+          this.props.onDragEnd();
+        }
       },
     });
   }
