@@ -116,34 +116,33 @@ export default class CircularSlider extends PureComponent {
     this._sleepPanResponder = PanResponder.create({
       onMoveShouldSetPanResponder: (evt, gestureState) => true,
       onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
-
+      
       onPanResponderGrant: () => {
-        console.log('started');
-        if (this.props.onDragStart) {
+        if(this.props.onDragStart) {
           this.props.onDragStart();
         }
       },
 
       onPanResponderEnd: () => {
-        console.log('ended');
-        if (this.props.onDragEnd) {
+        if(this.props.onDragEnd) {
           this.props.onDragEnd();
         }
       },
 
       onPanResponderRelease: () => {
-        console.log('ended');
-        if (this.props.onDragEnd) {
+        if(this.props.onDragEnd) {
           this.props.onDragEnd();
         }
       },
-      onPanResponderMove: (evt, { moveX, moveY }) => {
-        const { circleCenterX, circleCenterY } = this.state;
+      onPanResponderMove: ({nativeEvent: {locationX, locationY}}, { moveX, moveY }) => {
+
+        const circleCenterX = this.containerWidth/2;
+        const circleCenterY = this.containerWidth/2;
         const { angleLength, startAngle, onUpdate } = this.props;
 
         const currentAngleStop = (startAngle + angleLength) % (2 * Math.PI);
         let newAngle =
-          Math.atan2(moveY - circleCenterY, moveX - circleCenterX) +
+          Math.atan2(locationY - circleCenterY, locationX - circleCenterX) +
           Math.PI / 2;
 
         if (newAngle < 0) {
@@ -164,30 +163,20 @@ export default class CircularSlider extends PureComponent {
           // this.wakeHourParameter.rotation = 0;
         }
 
-        console.log(
-          'current Angle',
-          currentAngle,
-          previousAngle,
-          currentAngle - previousAngle
-        );
-
-        if (currentAngle !== null && previousAngle !== null) {
-          if (currentAngle - previousAngle > 300) {
-            console.log('condition 1');
-            if (this.wakeHourParameter.rotation === 0) {
-              this.wakeHourParameter.rotation = 1;
-            } else {
-              this.wakeHourParameter.rotation = 0;
-            }
-          } else if (currentAngle - previousAngle < -300) {
-            console.log('condition 2');
-            if (this.wakeHourParameter.rotation === 0) {
-              this.wakeHourParameter.rotation = 1;
-            } else {
-              this.wakeHourParameter.rotation = 0;
-            }
+if(currentAngle !==null && previousAngle !== null){  
+        if (currentAngle - previousAngle > 300) {
+          if (this.wakeHourParameter.rotation === 0) {
+            this.wakeHourParameter.rotation = 1;
+          } else {
+            this.wakeHourParameter.rotation = 0;
           }
-        }
+        } else if (currentAngle - previousAngle < -300) {
+          if (this.wakeHourParameter.rotation === 0) {
+            this.wakeHourParameter.rotation = 1;
+          } else {
+            this.wakeHourParameter.rotation = 0;
+          }
+        }}
 
         if (this.wakeHourParameter.rotation === 1) {
           newAngle += 2 * Math.PI;
@@ -209,12 +198,14 @@ export default class CircularSlider extends PureComponent {
       onMoveShouldSetPanResponder: (evt, gestureState) => true,
       onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
 
-      onPanResponderMove: (evt, { moveX, moveY }) => {
-        const { circleCenterX, circleCenterY } = this.state;
+      onPanResponderMove: ({nativeEvent: {locationX, locationY}}, { moveX, moveY }) => {
         const { angleLength, startAngle, onUpdate } = this.props;
 
+        const circleCenterX = this.containerWidth/2;
+        const circleCenterY = this.containerWidth/2;
+
         let newAngle =
-          Math.atan2(moveY - circleCenterY, moveX - circleCenterX) +
+          Math.atan2(locationY - circleCenterY, locationX - circleCenterX) +
           Math.PI / 2;
         let newAngleLength = (newAngle - startAngle) % (2 * Math.PI);
 
@@ -226,25 +217,24 @@ export default class CircularSlider extends PureComponent {
       },
 
       onPanResponderGrant: () => {
-        console.log('wake start');
-        if (this.props.onDragStart) {
+        if(this.props.onDragStart) {
           this.props.onDragStart();
         }
       },
 
+
       onPanResponderEnd: () => {
-        console.log('wake end');
-        if (this.props.onDragEnd) {
+        if(this.props.onDragEnd) {
           this.props.onDragEnd();
         }
       },
 
       onPanResponderRelease: () => {
-        console.log('wake end');
-        if (this.props.onDragEnd) {
+        if(this.props.onDragEnd) {
           this.props.onDragEnd();
         }
-      },
+      }
+
     });
   }
 
@@ -265,7 +255,8 @@ export default class CircularSlider extends PureComponent {
 
   getContainerWidth() {
     const { strokeWidth, radius } = this.props;
-    return strokeWidth + radius * 2 + 2;
+    this.containerWidth = strokeWidth + radius * 2 + 2
+    return this.containerWidth;
   }
 
   render() {
