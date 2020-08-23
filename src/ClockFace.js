@@ -12,7 +12,7 @@ export default class ClockFace extends PureComponent {
   render() {
     const { r, stroke } = this.props;
     const faceRadius = r - 5;
-    const textRadius = r - 26;
+    const textRadius = r - 22;
 
     return (
       <G>
@@ -32,12 +32,12 @@ export default class ClockFace extends PureComponent {
             />
           );
         })}
-        {/* <G transform={{ translate: '0, 6' }}>
+        <G transform={{ translate: '0, 6' }}>
           {range(12).map((h, i) => (
             <Text
               key={i}
               fill={stroke}
-              fontSize='20'
+              fontSize='12'
               textAnchor='middle'
               x={
                 textRadius *
@@ -51,7 +51,7 @@ export default class ClockFace extends PureComponent {
               {h + 1}
             </Text>
           ))}
-        </G> */}
+        </G>
       </G>
     );
   }
